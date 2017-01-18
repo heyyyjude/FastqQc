@@ -70,7 +70,7 @@ func getStat(s []float64) map[string]float64 {
 	var m = make(map[string]float64)
 	max, _ := stats.Max(s)
 	min, _ := stats.Min(s)
-	median, _ := stats.Mean(s)
+	median, _ := stats.Median(s)
 	quarile, _ := stats.Quartile(s)
 	mean, _ := stats.Mean(s)
 
@@ -88,7 +88,7 @@ func getStat(s []float64) map[string]float64 {
 func printQualMeanOfPos(m map[int]float64) {
 	var res []int
 
-	for k, _ := range m {
+	for k := range m {
 		res = append(res, k)
 	}
 
@@ -101,9 +101,9 @@ func printQualMeanOfPos(m map[int]float64) {
 
 func printQualCli(m map[int]float64) {
 
-	var sortedKey = make([] int,0)
+	var sortedKey = make([] int, 0)
 
-	for k, _ := range m {
+	for k := range m {
 		sortedKey = append(sortedKey, k)
 	}
 
@@ -159,7 +159,7 @@ func QualCliHelper(q float64) string {
 }
 
 func main() {
-	if len(os.Args) !=2 {
+	if len(os.Args) != 2 {
 		fmt.Println("Usage")
 		fmt.Println("FastQc fastq.gz")
 		os.Exit(0)
