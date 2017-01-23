@@ -9,6 +9,7 @@ import (
 	"compress/gzip"
 	"github.com/montanaflynn/stats"
 	"sort"
+	"io"
 )
 
 func checkError(err error) {
@@ -158,22 +159,42 @@ func QualCliHelper(q float64) string {
 
 }
 
-func main() {
-	if len(os.Args) != 2 {
+func mainHelper(arg []string) {
+	if len(arg) != 3 {
 		fmt.Println("Usage")
-		fmt.Println("FastQc fastq.gz")
+		fmt.Println("-fq : a fastq file")
+		fmt.Println("-gz : a fastq.gz file")
+		fmt.Println("FastQc -fq fastq")
+		fmt.Println("FastQc -gz fastq.gz")
 		os.Exit(0)
 	}
-	fastqGz := os.Args[1]
 
-	fq, err := os.Open(fastqGz)
-	checkError(err)
-	defer fq.Close()
+	if arg[1] == "-fq" {
+		fastq := arg[2]
+		fq, err := os.Open(fastq)
+		checkError(err)
+		var fqReader = bufio.NewReader(fq)
 
-	fqgz, err := gzip.NewReader(fq)
-	//fqgz := bufio.NewReader(fq)
-	checkError(err)
-	defer fqgz.Close()
+		Run(fqReader)
+
+		defer fq.Close()
+	} else if arg[1] == "-gz" {
+		fqgz := arg[2]
+		fq, err := os.Open(fqgz)
+		checkError(err)
+		fqReader, err := gzip.NewReader(fq)
+		checkError(err)
+
+		Run(fqReader)
+
+		defer fqReader.Close()
+	} else {
+		fmt.Println("-fq|-gz option required.")
+		os.Exit(0)
+	}
+}
+
+func Run(fqgz io.Reader) {
 
 	scanner := bufio.NewScanner(fqgz)
 	scanner.Split(bufio.ScanLines)
@@ -233,4 +254,8 @@ func main() {
 
 	fmt.Println("---quality plot---")
 	printQualCli(qualPostStatM)
+}
+
+func main() {
+	mainHelper(os.Args)
 }

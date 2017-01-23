@@ -3,10 +3,14 @@ Fastq stat tool based on CLI
 
 ### Usage
 
-FastQc Fastq.gz
+FastQc -fq|-gz either a fastq.gz|fastq
 
 ####
-FastQc file is a binary file for linux. you can just download it and use it on linux.
+FastQc file is a binary file for linux. you can just download it and use it.
+
+the quality bar plot meaning
+5 : ----|----| ( mean of 1,2,3,4,5 position quality score )
+10 : ----|----|-- ( mean of 6,7,8,9,10 position quality score )
 
 ### OUTPUT
 
